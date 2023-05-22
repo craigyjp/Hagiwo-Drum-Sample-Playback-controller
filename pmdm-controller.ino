@@ -238,16 +238,16 @@ void updateVariables() {
       break;
   }
   if (drumsample) {
-  updateDrum_Sample();
+    updateDrum_Sample();
   }
   if (drumvolume) {
-  updateVolume();
+    updateVolume();
   }
   if (drumfilter) {
-  updateFilterSW();
+    updateFilterSW();
   }
   if (drumtuning) {
-  updateTuning();
+    updateTuning();
   }
 }
 
@@ -257,6 +257,7 @@ void updateNextSW() {
     drum_number = 1;
   }
   updateVariables();
+  updateFilterSW();
 }
 
 void updatePreviousSW() {
@@ -265,6 +266,7 @@ void updatePreviousSW() {
     drum_number = 16;
   }
   updateVariables();
+  updateFilterSW();
 }
 
 void updateDrum_Sample() {
@@ -293,7 +295,6 @@ void updateVolume() {
 
 void updatevolumeControl() {
   showCurrentParameterPage("Master Volume", int(volumeControlstr));
-
 }
 
 // ////////////////////////////////////////////////////////////////
@@ -968,7 +969,6 @@ void setCurrentPatchData(String data[]) {
     updateRecallDrum_Sample();
     updateRecallTuning();
     updateRecallFilterSW();
-    
   }
   drum_number = old_drum_number;
   updateVariables();
@@ -1363,6 +1363,7 @@ void checkEncoder() {
 }
 
 void checkDrumEncoder() {
+
   long drum_encRead = drum_encoder.read();
   if ((drum_encCW && drum_encRead > drum_encPrevious + 3) || (!drum_encCW && drum_encRead < drum_encPrevious - 3)) {
     sample = sample + 1;
@@ -1378,6 +1379,59 @@ void checkDrumEncoder() {
     }
     drum_encPrevious = drum_encRead;
     myControlChange(midiChannel, CCsample, sample);
+  }
+
+  long param_encRead = param_encoder.read();
+  if ((param_encCW && param_encRead > param_encPrevious + 3) || (!param_encCW && param_encRead < param_encPrevious - 3)) {
+    param_number = param_number + 1;
+    if (param_number > 4) {
+      param_number = 1;
+    }
+    switch (param_number) {
+      case 1:
+        updateDrum_Sample();
+        break;
+
+      case 2:
+        updateTuning();
+        break;
+
+      case 3:
+        updateVariables();
+        updateFilterSW();
+        break;
+
+      case 4:
+        updateVolume();
+        break;
+    }
+
+    param_encPrevious = param_encRead;
+
+  } else if ((param_encCW && param_encRead < param_encPrevious - 3) || (!param_encCW && param_encRead > param_encPrevious + 3)) {
+    param_number = param_number - 1;
+    if (param_number < 1) {
+      param_number = 4;
+    }
+    switch (param_number) {
+      case 1:
+        updateDrum_Sample();
+        break;
+
+      case 2:
+        updateTuning();
+        break;
+
+      case 3:
+        updateVariables();
+        updateFilterSW();
+        break;
+
+      case 4:
+        updateVolume();
+        break;
+    }
+    param_encPrevious = param_encRead;
   }
 }
 

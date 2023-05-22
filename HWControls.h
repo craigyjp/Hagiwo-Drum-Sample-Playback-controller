@@ -52,6 +52,8 @@ ADC *adc = new ADC();
 #define ENCODER_PINB 5
 #define ENCODER_DRUMA 6
 #define ENCODER_DRUMB 7
+#define ENCODER_PARAMA 25
+#define ENCODER_PARAMB 26
 
 #define DEMUXCHANNELS 16
 #define QUANTISE_FACTOR 15
@@ -68,6 +70,7 @@ static int mux3Read = 0;
 
 static long encPrevious = 0;
 static long drum_encPrevious = 0;
+static long param_encPrevious = 0;
 
 //These are pushbuttons and require debouncing
 Bounce previousSwitch = Bounce(PREVIOUS_SW, DEBOUNCE);
@@ -80,6 +83,7 @@ TButton backButton{BACK_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
 TButton recallButton{RECALL_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION}; //On encoder
 Encoder encoder(ENCODER_PINB, ENCODER_PINA);//This often needs the pins swapping depending on the encoder
 Encoder drum_encoder(ENCODER_DRUMB, ENCODER_DRUMA);//This often needs the pins swapping depending on the encoder
+Encoder param_encoder(ENCODER_PARAMB, ENCODER_PARAMA);//This often needs the pins swapping depending on the encoder
 
 void setupHardware()
 {

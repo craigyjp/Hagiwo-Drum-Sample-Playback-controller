@@ -3,6 +3,9 @@ byte midiChannel = MIDI_CHANNEL_OMNI;//(EEPROM)
 String patchName = INITPATCHNAME;
 boolean encCW = true;//This is to set the encoder to increment when turned CW - Settings Option
 boolean drum_encCW = true;//This is to set the encoder to increment when turned CW - Settings Option
+boolean param_encCW = true;
+
+int param_number = 1;
 int drum_number = 1;
 int old_drum_number = 1;
 
