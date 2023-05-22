@@ -12,6 +12,6 @@ Started building the programmer to control 16 Hagiwo Drum modules. I didn't want
 * Naming of kits.
 * Controls upto 16 drum modules.
 
-* Todo
+# Todo
 
 Add menus for the drum names
