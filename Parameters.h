@@ -4,6 +4,7 @@ String patchName = INITPATCHNAME;
 boolean encCW = true;//This is to set the encoder to increment when turned CW - Settings Option
 boolean drum_encCW = true;//This is to set the encoder to increment when turned CW - Settings Option
 int drum_number = 1;
+int old_drum_number = 1;
 
 boolean drumsample = false;
 boolean drumtuning = false;

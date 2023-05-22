@@ -881,6 +881,7 @@ void myProgramChange(byte channel, byte program) {
 }
 
 void recallPatch(int patchNo) {
+  old_drum_number = drum_number;
   allNotesOff();
   File patchFile = SD.open(String(patchNo).c_str());
   if (!patchFile) {
@@ -967,9 +968,10 @@ void setCurrentPatchData(String data[]) {
     updateRecallDrum_Sample();
     updateRecallTuning();
     updateRecallFilterSW();
+    
   }
-
-  drum_number = 1;
+  drum_number = old_drum_number;
+  updateVariables();
 
 
 
