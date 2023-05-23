@@ -25,6 +25,7 @@
 #include "MidiCC.h"
 #include "Constants.h"
 #include "Parameters.h"
+#include "Drums.h"
 #include "PatchMgr.h"
 #include "HWControls.h"
 #include "EepromMgr.h"
@@ -270,7 +271,18 @@ void updateFilterSW(boolean announce) {
 }
 
 void updateDrum_Sample() {
-  showCurrentParameterPage("Drum Sample", int(sample));
+  if (sample < 13) {
+  showCurrentParameterPage("Drum Sample", String(drum_names1[drum_number -1][sample -1]));
+  }
+  if (sample > 12 && sample < 25 ) {
+  showCurrentParameterPage("Drum Sample", String(drum_names2[drum_number -1][sample -13]));
+  }
+    if (sample > 24 && sample < 37) {
+  showCurrentParameterPage("Drum Sample", String(drum_names3[drum_number -1][sample -25]));
+  }
+  if (sample > 36 ) {
+  showCurrentParameterPage("Drum Sample", String(drum_names4[drum_number -1][sample -37]));
+  }
   drumsample = 1;
   drumtuning = 0;
   drumvolume = 0;
@@ -1351,16 +1363,16 @@ void checkDrumEncoder() {
   long sample_encRead = sample_encoder.read();
   if ((sample_encCW && sample_encRead > sample_encPrevious + 3) || (!sample_encCW && sample_encRead < sample_encPrevious - 3)) {
     sample = sample + 1;
-    if (sample > 47) {
-      sample = 0;
+    if (sample > 48) {
+      sample = 1;
     }
     sample_encPrevious = sample_encRead;
     myControlChange(midiChannel, CCsample, sample);
 
   } else if ((sample_encCW && sample_encRead < sample_encPrevious - 3) || (!sample_encCW && sample_encRead > sample_encPrevious + 3)) {
     sample = sample - 1;
-    if (sample < 0) {
-      sample = 47;
+    if (sample < 1) {
+      sample = 48;
     }
     sample_encPrevious = sample_encRead;
     myControlChange(midiChannel, CCsample, sample);
