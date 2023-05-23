@@ -1,20 +1,12 @@
-# Hagiwo-Drum-Sample-Playback-controller
-Programmer section for 16 Hagiwo Drum sample Modules
+![](https://electrotechnique.github.io/etlogo.png)
 
-Started building the programmer to control 16 Hagiwo Drum modules. I didn't want a sea of knobs and buttons because basically I don't have any to buy and I have limited space. So I have a couple of buttons to select the drum modules 1-16, could be changed to an encoder and 4 controls to set parameters for the drum module, an encoder to select drum sample 1-48, a tuning pot, a volume pot and a low pass filter on/off button. So far so good, I've used a larger screen to get all the relevant information needed for each patch and drum. This can also be used as a standalone drum module over MIDI, each of the 16 drums is mapped to a note, possibility of velocity too.
+# Teensy 3.6 based synthesizer using PJRC Audio Board and Audio Lib
 
-# Features
-* 999 memories for drum kits.
-* Sample selection 1-48.
-* Sample Tuning value 0-127.
-* Sample Volume value 0-127.
-* Playback LP Filter Enable/Disable
-* Naming of kits.
-* Controls upto 16 drum modules.
-* MIDI porgram change for kits
-* MIDI CC editing
-* MIDI note to drum mapping
+Website: [electrotechnique.cc](https://electrotechnique.cc)
 
-# Todo
+The pcb and front panel to build TSynth will be available around May 2020 from [Tindie](https://www.tindie.com/products/electrotechnique/tsynth-teensy-based-diy-programmable-poly-synth/) with SMD 4067 multiplexers, 6N138 opto-isolator, capacitors and resistors fitted. The entire cost of parts to build TSynth will be around $99 if you buy components from the cheaper suppliers and the build time around two hours to solder. Plans for a 3D printed/laser cut enclosure will be available.
+Questions: info@electrotechnique.cc
 
-Add menus for the drum names
+# Instructions
+
+The source code requires Teensyduino from [PJRC](https://pjrc.com) to compile. You also need to put the files in Modified Libraries into the Teensy Audio folder to replace the installed versions. You also need CircularBuffer from Agileware, which is available in the Arduino Library Manager.

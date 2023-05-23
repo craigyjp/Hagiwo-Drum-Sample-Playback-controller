@@ -77,5 +77,6 @@
 #define   CCtuning 75
 #define   CCvolume 76
 #define   CCsample 77
+#define   CCdrum 78
 
 #define   CCallnotesoff 123//Panic button

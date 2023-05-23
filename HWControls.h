@@ -43,8 +43,7 @@ ADC *adc = new ADC();
 #define SETTINGS_SW 12
 #define BACK_SW 10
 
-#define PREVIOUS_SW 30
-#define NEXT_SW 31
+
 #define FILTER_SW 32
 #define FILTER_LED 9
 
@@ -54,6 +53,8 @@ ADC *adc = new ADC();
 #define ENCODER_DRUMB 7
 #define ENCODER_PARAMA 25
 #define ENCODER_PARAMB 26
+#define ENCODER_PREVIOUS 30
+#define ENCODER_NEXT 31
 
 #define DEMUXCHANNELS 16
 #define QUANTISE_FACTOR 15
@@ -69,12 +70,12 @@ static int mux2Read = 0;
 static int mux3Read = 0;
 
 static long encPrevious = 0;
-static long drum_encPrevious = 0;
+static long sample_encPrevious = 0;
 static long param_encPrevious = 0;
+static long drum_encPrevious = 0;
 
 //These are pushbuttons and require debouncing
-Bounce previousSwitch = Bounce(PREVIOUS_SW, DEBOUNCE);
-Bounce nextSwitch = Bounce(NEXT_SW, DEBOUNCE);
+
 Bounce filterSwitch = Bounce(FILTER_SW, DEBOUNCE);
 
 TButton saveButton{SAVE_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
@@ -82,8 +83,9 @@ TButton settingsButton{SETTINGS_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION
 TButton backButton{BACK_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
 TButton recallButton{RECALL_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION}; //On encoder
 Encoder encoder(ENCODER_PINB, ENCODER_PINA);//This often needs the pins swapping depending on the encoder
-Encoder drum_encoder(ENCODER_DRUMB, ENCODER_DRUMA);//This often needs the pins swapping depending on the encoder
+Encoder sample_encoder(ENCODER_DRUMB, ENCODER_DRUMA);//This often needs the pins swapping depending on the encoder
 Encoder param_encoder(ENCODER_PARAMB, ENCODER_PARAMA);//This often needs the pins swapping depending on the encoder
+Encoder drum_encoder(ENCODER_PREVIOUS, ENCODER_NEXT);//This often needs the pins swapping depending on the encoder
 
 void setupHardware()
 {
@@ -129,8 +131,6 @@ void setupHardware()
   pinMode(SETTINGS_SW, INPUT_PULLUP);
   pinMode(BACK_SW, INPUT_PULLUP);
 
-  pinMode(PREVIOUS_SW, INPUT_PULLUP);
-  pinMode(NEXT_SW, INPUT_PULLUP);
   pinMode(FILTER_SW, INPUT_PULLUP);
   
 }

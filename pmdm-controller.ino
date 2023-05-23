@@ -109,20 +109,6 @@ void setup() {
 void allNotesOff() {
 }
 
-void updateFilterSW() {
-  if (filter == 127) {
-    showCurrentParameterPage("LP Filter", String("On"));
-    digitalWrite(FILTER_LED, HIGH);
-  } else {
-    showCurrentParameterPage("LP Filter", String("Off"));
-    digitalWrite(FILTER_LED, LOW);
-  }
-  drumsample = 0;
-  drumtuning = 0;
-  drumvolume = 0;
-  drumfilter = 1;
-}
-
 void updateVariables() {
   switch (drum_number) {
     case 1:
@@ -244,29 +230,43 @@ void updateVariables() {
     updateVolume();
   }
   if (drumfilter) {
-    updateFilterSW();
+    updateFilterSW(0);
   }
   if (drumtuning) {
     updateTuning();
   }
 }
 
-void updateNextSW() {
-  drum_number = drum_number + 1;
-  if (drum_number > 16) {
-    drum_number = 1;
-  }
+void updateDrumNumber() {
   updateVariables();
-  updateFilterSW();
+  updateFilterSW(0);
 }
 
-void updatePreviousSW() {
-  drum_number = drum_number - 1;
-  if (drum_number < 1) {
-    drum_number = 16;
+void updateFilterSW(boolean announce) {
+
+  if (filter == 127) {
+    if ((announce) || (drumfilter && (prevfilter != filter))) {
+      showCurrentParameterPage("LP Filter", String("On"));
+
+      drumsample = 0;
+      drumtuning = 0;
+      drumvolume = 0;
+      drumfilter = 1;
+    }
+    digitalWrite(FILTER_LED, HIGH);
   }
-  updateVariables();
-  updateFilterSW();
+  if (filter == 0) {
+    if ((announce) || (drumfilter && (prevfilter != filter))) {
+      showCurrentParameterPage("LP Filter", String("Off"));
+
+      drumsample = 0;
+      drumtuning = 0;
+      drumvolume = 0;
+      drumfilter = 1;
+    }
+    digitalWrite(FILTER_LED, LOW);
+  }
+  prevfilter = filter;
 }
 
 void updateDrum_Sample() {
@@ -678,6 +678,11 @@ void myControlChange(byte channel, byte control, int value) {
       updatevolumeControl();
       break;
 
+    case CCdrum:
+      drum_number = value;
+      updateDrumNumber();
+      break;
+
     case CCsample:
       sample = value;
       switch (drum_number) {
@@ -853,17 +858,7 @@ void myControlChange(byte channel, byte control, int value) {
           midiCCOut(10, filter);
           break;
       }
-      updateFilterSW();
-      break;
-
-    case CCpreviousSW:
-      value > 0 ? previousSW = 1 : previousSW = 0;
-      updatePreviousSW();
-      break;
-
-    case CCnextSW:
-      value > 0 ? nextSW = 1 : nextSW = 0;
-      updateNextSW();
+      updateFilterSW(1);
       break;
 
     case CCallnotesoff:
@@ -972,6 +967,7 @@ void setCurrentPatchData(String data[]) {
   }
   drum_number = old_drum_number;
   updateVariables();
+  updateFilterSW(0);
 
 
 
@@ -1092,18 +1088,6 @@ void showSettingsPage() {
 }
 
 void checkSwitches() {
-
-  previousSwitch.update();
-  if (previousSwitch.fallingEdge()) {
-    previousSW = !previousSW;
-    myControlChange(midiChannel, CCpreviousSW, previousSW);
-  }
-
-  nextSwitch.update();
-  if (nextSwitch.fallingEdge()) {
-    nextSW = !nextSW;
-    myControlChange(midiChannel, CCnextSW, nextSW);
-  }
 
   filterSwitch.update();
   if (filterSwitch.fallingEdge()) {
@@ -1364,20 +1348,21 @@ void checkEncoder() {
 
 void checkDrumEncoder() {
 
-  long drum_encRead = drum_encoder.read();
-  if ((drum_encCW && drum_encRead > drum_encPrevious + 3) || (!drum_encCW && drum_encRead < drum_encPrevious - 3)) {
+  long sample_encRead = sample_encoder.read();
+  if ((sample_encCW && sample_encRead > sample_encPrevious + 3) || (!sample_encCW && sample_encRead < sample_encPrevious - 3)) {
     sample = sample + 1;
     if (sample > 47) {
       sample = 0;
     }
-    drum_encPrevious = drum_encRead;
+    sample_encPrevious = sample_encRead;
     myControlChange(midiChannel, CCsample, sample);
-  } else if ((drum_encCW && drum_encRead < drum_encPrevious - 3) || (!drum_encCW && drum_encRead > drum_encPrevious + 3)) {
+
+  } else if ((sample_encCW && sample_encRead < sample_encPrevious - 3) || (!sample_encCW && sample_encRead > sample_encPrevious + 3)) {
     sample = sample - 1;
     if (sample < 0) {
       sample = 47;
     }
-    drum_encPrevious = drum_encRead;
+    sample_encPrevious = sample_encRead;
     myControlChange(midiChannel, CCsample, sample);
   }
 
@@ -1398,7 +1383,7 @@ void checkDrumEncoder() {
 
       case 3:
         updateVariables();
-        updateFilterSW();
+        updateFilterSW(0);
         break;
 
       case 4:
@@ -1424,7 +1409,7 @@ void checkDrumEncoder() {
 
       case 3:
         updateVariables();
-        updateFilterSW();
+        updateFilterSW(0);
         break;
 
       case 4:
@@ -1432,6 +1417,24 @@ void checkDrumEncoder() {
         break;
     }
     param_encPrevious = param_encRead;
+  }
+
+  long drum_encRead = drum_encoder.read();
+  if ((drum_encCW && drum_encRead > drum_encPrevious + 3) || (!drum_encCW && drum_encRead < drum_encPrevious - 3)) {
+    drum_number = drum_number + 1;
+    if (drum_number > 16) {
+      drum_number = 1;
+    }
+    drum_encPrevious = drum_encRead;
+    myControlChange(midiChannel, CCdrum, drum_number);
+
+  } else if ((drum_encCW && drum_encRead < drum_encPrevious - 3) || (!drum_encCW && drum_encRead > drum_encPrevious + 3)) {
+    drum_number = drum_number - 1;
+    if (drum_number < 1) {
+      drum_number = 16;
+    }
+    drum_encPrevious = drum_encRead;
+    myControlChange(midiChannel, CCdrum, drum_number);
   }
 }
 
