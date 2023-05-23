@@ -1383,7 +1383,7 @@ void checkDrumEncoder() {
 
       case 3:
         updateVariables();
-        updateFilterSW(0);
+        updateFilterSW(1);
         break;
 
       case 4:
@@ -1409,7 +1409,7 @@ void checkDrumEncoder() {
 
       case 3:
         updateVariables();
-        updateFilterSW(0);
+        updateFilterSW(1);
         break;
 
       case 4:
