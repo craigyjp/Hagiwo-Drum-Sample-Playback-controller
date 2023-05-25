@@ -272,16 +272,16 @@ void updateFilterSW(boolean announce) {
 
 void updateDrum_Sample() {
   if (sample < 13) {
-  showCurrentParameterPage("Drum Sample", String(drum_names1[drum_number -1][sample -1]));
+    showCurrentParameterPage("Drum Sample", String(drum_names1[drum_number - 1][sample - 1]));
   }
-  if (sample > 12 && sample < 25 ) {
-  showCurrentParameterPage("Drum Sample", String(drum_names2[drum_number -1][sample -13]));
+  if (sample > 12 && sample < 25) {
+    showCurrentParameterPage("Drum Sample", String(drum_names2[drum_number - 1][sample - 13]));
   }
-    if (sample > 24 && sample < 37) {
-  showCurrentParameterPage("Drum Sample", String(drum_names3[drum_number -1][sample -25]));
+  if (sample > 24 && sample < 37) {
+    showCurrentParameterPage("Drum Sample", String(drum_names3[drum_number - 1][sample - 25]));
   }
-  if (sample > 36 ) {
-  showCurrentParameterPage("Drum Sample", String(drum_names4[drum_number -1][sample -37]));
+  if (sample > 36) {
+    showCurrentParameterPage("Drum Sample", String(drum_names4[drum_number - 1][sample - 37]));
   }
   drumsample = 1;
   drumtuning = 0;
@@ -1027,6 +1027,10 @@ void midiPRGout(byte value) {
   MIDI.sendProgramChange(value, drum_number);
 }
 
+void midiNoteout(byte note, byte velocity) {
+  MIDI.sendNoteOn(note, velocity, drum_number);
+}
+
 void writeDemux() {
 
   //DEMUX 1
@@ -1107,6 +1111,74 @@ void checkSwitches() {
     myControlChange(midiChannel, CCfilterSW, filterSW);
   }
 
+  drumButton.update();
+  if (drumButton.numClicks() == 1) {
+    switch (drum_number) {
+      case 1:
+        midiNoteout(36, 127);
+        break;
+
+      case 2:
+        midiNoteout(38, 127);
+        break;
+
+      case 3:
+        midiNoteout(36, 127);
+        break;
+
+      case 4:
+        midiNoteout(38, 127);
+        break;
+
+      case 5:
+        midiNoteout(36, 127);
+        break;
+
+      case 6:
+        midiNoteout(38, 127);
+        break;
+
+      case 7:
+        midiNoteout(36, 127);
+        break;
+
+      case 8:
+        midiNoteout(38, 127);
+        break;
+
+      case 9:
+        midiNoteout(36, 127);
+        break;
+
+      case 10:
+        midiNoteout(38, 127);
+        break;
+
+      case 11:
+        midiNoteout(36, 127);
+        break;
+
+      case 12:
+        midiNoteout(38, 127);
+        break;
+
+      case 13:
+        midiNoteout(36, 127);
+        break;
+
+      case 14:
+        midiNoteout(38, 127);
+        break;
+
+      case 15:
+        midiNoteout(36, 127);
+        break;
+
+      case 16:
+        midiNoteout(38, 127);
+        break;
+    }
+  }
 
   saveButton.update();
   if (saveButton.held()) {

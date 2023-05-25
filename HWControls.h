@@ -42,6 +42,7 @@ ADC *adc = new ADC();
 #define SAVE_SW 24
 #define SETTINGS_SW 12
 #define BACK_SW 10
+#define DRUM_SW 29
 
 
 #define FILTER_SW 32
@@ -78,6 +79,7 @@ static long drum_encPrevious = 0;
 
 Bounce filterSwitch = Bounce(FILTER_SW, DEBOUNCE);
 
+TButton drumButton{DRUM_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
 TButton saveButton{SAVE_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
 TButton settingsButton{SETTINGS_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
 TButton backButton{BACK_SW, LOW, HOLD_DURATION, DEBOUNCE, CLICK_DURATION};
@@ -130,6 +132,7 @@ void setupHardware()
   pinMode(SAVE_SW, INPUT_PULLUP);
   pinMode(SETTINGS_SW, INPUT_PULLUP);
   pinMode(BACK_SW, INPUT_PULLUP);
+  pinMode(DRUM_SW, INPUT_PULLUP);
 
   pinMode(FILTER_SW, INPUT_PULLUP);
   
